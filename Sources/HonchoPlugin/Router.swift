@@ -29,11 +29,4 @@ enum Router {
             }
         }
     }
-
-    private static func encodeError(_ message: String) -> String {
-        let escaped = message
-            .replacingOccurrences(of: "\\", with: "\\\\")
-            .replacingOccurrences(of: "\"", with: "\\\"")
-        return "{\"error\": \"\(escaped)\"}"
-    }
 }

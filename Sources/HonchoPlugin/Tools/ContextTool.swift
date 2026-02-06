@@ -1,20 +1,24 @@
 import Foundation
 
 enum ContextTool {
+    private struct ContextParams: Decodable {
+        let searchQuery: String?
+
+        enum CodingKeys: String, CodingKey {
+            case searchQuery = "search_query"
+        }
+    }
+
     static func execute(ctx: PluginContext, payload: String) async throws -> String {
         let (_, sessionName, client) = try ctx.parsePayload(payload)
         try await ctx.ensureInitialized(client: client)
         let session = try await ctx.ensureSession(client: client, sessionName: sessionName)
 
-        let searchQuery: String? = {
-            guard let data = payload.data(using: .utf8),
-                  let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any] else { return nil }
-            return json["search_query"] as? String
-        }()
+        let params = try ctx.decodeParams(ContextParams.self, from: payload)
 
         let context = try await client.getSessionContext(
             sessionId: session.id,
-            searchQuery: searchQuery,
+            searchQuery: params.searchQuery,
             summary: true,
             peerTarget: ctx.ownerPeer,
             peerPerspective: ctx.agentPeer

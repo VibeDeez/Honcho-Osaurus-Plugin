@@ -1,20 +1,24 @@
 import Foundation
 
 enum SessionTool {
+    private struct SessionParams: Decodable {
+        let includeSummary: Bool?
+
+        enum CodingKeys: String, CodingKey {
+            case includeSummary = "include_summary"
+        }
+    }
+
     static func execute(ctx: PluginContext, payload: String) async throws -> String {
         let (_, sessionName, client) = try ctx.parsePayload(payload)
         try await ctx.ensureInitialized(client: client)
         let session = try await ctx.ensureSession(client: client, sessionName: sessionName)
 
-        let includeSummary: Bool = {
-            guard let data = payload.data(using: .utf8),
-                  let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any] else { return true }
-            return json["include_summary"] as? Bool ?? true
-        }()
+        let params = try ctx.decodeParams(SessionParams.self, from: payload)
 
         let context = try await client.getSessionContext(
             sessionId: session.id,
-            summary: includeSummary,
+            summary: params.includeSummary ?? true,
             peerTarget: ctx.ownerPeer,
             peerPerspective: ctx.agentPeer
         )

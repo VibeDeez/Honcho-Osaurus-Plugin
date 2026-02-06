@@ -10,8 +10,7 @@ enum SaveConclusionTool {
         try await ctx.ensureInitialized(client: client)
         let session = try await ctx.ensureSession(client: client, sessionName: sessionName)
 
-        guard let data = payload.data(using: .utf8) else { throw HonchoError.invalidResponse }
-        let params = try JSONDecoder().decode(SaveConclusionParams.self, from: data)
+        let params = try ctx.decodeParams(SaveConclusionParams.self, from: payload)
 
         let conclusions = try await client.createConclusion(
             content: params.content,

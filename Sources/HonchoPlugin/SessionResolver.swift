@@ -1,30 +1,28 @@
 import Foundation
 
 enum SessionResolver {
+    private static let allowedCharacters = CharacterSet.alphanumerics.union(CharacterSet(charactersIn: "-_"))
+    private static let maxLength = 100
+
     static func resolve(workingDirectory: String?) -> String {
         guard let dir = workingDirectory, !dir.isEmpty else {
             return "default"
         }
 
-        let url = URL(fileURLWithPath: dir)
-        let lastComponent = url.lastPathComponent
+        let lastComponent = URL(fileURLWithPath: dir).lastPathComponent
 
-        if lastComponent == "/" || lastComponent.isEmpty {
+        guard lastComponent != "/" && !lastComponent.isEmpty else {
             return "default"
         }
 
-        let sanitized = lastComponent.map { c -> Character in
-            if c.isLetter || c.isNumber || c == "-" || c == "_" {
-                return c
-            }
-            return "-"
-        }
+        let sanitized = String(lastComponent.unicodeScalars.map { scalar in
+            allowedCharacters.contains(scalar) ? Character(scalar) : Character("-")
+        })
 
-        let result = String(sanitized)
-        if result.isEmpty {
+        guard !sanitized.isEmpty else {
             return "default"
         }
 
-        return String(result.prefix(100))
+        return String(sanitized.prefix(maxLength))
     }
 }

@@ -58,7 +58,5 @@ private var api = (
 
 @_cdecl("osaurus_plugin_entry")
 public func osaurusPluginEntry() -> UnsafeRawPointer {
-    return withUnsafePointer(to: &api) { ptr in
-        return UnsafeRawPointer(ptr)
-    }
+    withUnsafePointer(to: &api) { UnsafeRawPointer($0) }
 }

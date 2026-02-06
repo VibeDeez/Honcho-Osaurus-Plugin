@@ -15,8 +15,7 @@ enum SaveMessagesTool {
         try await ctx.ensureInitialized(client: client)
         let session = try await ctx.ensureSession(client: client, sessionName: sessionName)
 
-        guard let data = payload.data(using: .utf8) else { throw HonchoError.invalidResponse }
-        let params = try JSONDecoder().decode(SaveMessagesParams.self, from: data)
+        let params = try ctx.decodeParams(SaveMessagesParams.self, from: payload)
 
         let inputs = params.messages.map { msg in
             let peerId = msg.role == "user" ? ctx.ownerPeer : ctx.agentPeer

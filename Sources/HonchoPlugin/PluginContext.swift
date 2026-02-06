@@ -19,10 +19,7 @@ final class PluginContext: @unchecked Sendable {
             do {
                 result = try await work()
             } catch {
-                let escaped = error.localizedDescription
-                    .replacingOccurrences(of: "\\", with: "\\\\")
-                    .replacingOccurrences(of: "\"", with: "\\\"")
-                result = "{\"error\": \"\(escaped)\"}"
+                result = encodeError(error.localizedDescription)
             }
             semaphore.signal()
         }
@@ -75,6 +72,14 @@ final class PluginContext: @unchecked Sendable {
         let sessionName = SessionResolver.resolve(workingDirectory: payload.context?.workingDirectory)
         let c = client(apiKey: apiKey)
         return (apiKey, sessionName, c)
+    }
+
+    /// Decode tool-specific parameters from the payload JSON.
+    func decodeParams<T: Decodable>(_ type: T.Type, from payloadJSON: String) throws -> T {
+        guard let data = payloadJSON.data(using: .utf8) else {
+            throw HonchoError.invalidResponse
+        }
+        return try JSONDecoder().decode(type, from: data)
     }
 
     var ownerPeer: String { ownerPeerId }
