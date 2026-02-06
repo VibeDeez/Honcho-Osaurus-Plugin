@@ -243,6 +243,3 @@ See [CLAUDE.md](./CLAUDE.md) for development instructions, build commands, and a
 
 MIT License — See LICENSE file for details.
 
----
-
-**Made with ❤️ by [Plastic Labs](https://plasticlabs.ai)**
