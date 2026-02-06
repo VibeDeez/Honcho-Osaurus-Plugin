@@ -26,8 +26,10 @@ Download the latest release: [dev.honcho.osaurus-1.0.0.zip](https://github.com/V
 ### 2. Install in Osaurus
 
 ```bash
-osaurus tools install ./dev.honcho.osaurus-1.0.0.zip
+osaurus tools install /path/to/dev.honcho.osaurus-1.0.0.zip
 ```
+
+Replace `/path/to/` with the actual location of the downloaded file (e.g. `~/Downloads/dev.honcho.osaurus-1.0.0.zip`).
 
 Or install directly from the source directory during development:
 
