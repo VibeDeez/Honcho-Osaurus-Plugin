@@ -21,20 +21,31 @@ Each project gets its own isolated memory space, so your agent remembers project
 
 ### 1. Download the Plugin
 
-Download the latest release: [dev.honcho.osaurus-1.0.0.zip](https://github.com/plastic-labs/honcho-osaurus-plugin/releases)
+Download the latest release: [dev.honcho.osaurus-1.0.0.zip](https://github.com/VibeDeez/Honcho-Osaurus-Plugin/releases)
 
 ### 2. Install in Osaurus
 
-1. Open **Osaurus Preferences** (⌘,)
-2. Go to the **Plugins** tab
-3. Click **Install Plugin**
-4. Select the downloaded `dev.honcho.osaurus-1.0.0.zip` file
-5. Restart Osaurus
+```bash
+osaurus tools install ./dev.honcho.osaurus-1.0.0.zip
+```
+
+Or install directly from the source directory during development:
+
+```bash
+swift build -c release
+osaurus tools install .
+```
+
+Verify the installation:
+
+```bash
+osaurus tools list
+```
 
 ### 3. Configure Your API Key
 
-1. In Osaurus Preferences, find **Honcho** in the plugins list
-2. Click **Configure**
+1. Open the **Management window** (⌘⇧M)
+2. Find **Honcho** in the tools list
 3. Enter your **Honcho API Key** from [app.honcho.dev](https://app.honcho.dev)
 4. Save settings
 
